@@ -21,10 +21,15 @@ public extension UIColor {
       }
     }
     
+    guard let intCode = Int(hex, radix: 16) else {
+      self.init(white: 1.0, alpha: 0.0)
+      return
+    }
+    
     self.init(
-      red:   CGFloat((Int(hex, radix: 16)! >> 16) & 0xFF) / 255.0,
-      green: CGFloat((Int(hex, radix: 16)! >> 8) & 0xFF) / 255.0,
-      blue:  CGFloat((Int(hex, radix: 16)!) & 0xFF) / 255.0, alpha: 1.0)
+      red:   CGFloat((intCode >> 16) & 0xFF) / 255.0,
+      green: CGFloat((intCode >> 8) & 0xFF) / 255.0,
+      blue:  CGFloat((intCode) & 0xFF) / 255.0, alpha: 1.0)
   }
   
   /// Adjust color based on saturation
@@ -95,9 +100,9 @@ public extension UIColor {
     let threshold: CGFloat = 0.25
     var result = false
     
-    if fabs(bg[0] - fg[0]) > threshold || fabs(bg[1] - fg[1]) > threshold || fabs(bg[2] - fg[2]) > threshold {
-      if fabs(bg[0] - bg[1]) < 0.03 && fabs(bg[0] - bg[2]) < 0.03 {
-        if fabs(fg[0] - fg[1]) < 0.03 && fabs(fg[0] - fg[2]) < 0.03 {
+    if abs(bg[0] - fg[0]) > threshold || abs(bg[1] - fg[1]) > threshold || abs(bg[2] - fg[2]) > threshold {
+        if abs(bg[0] - bg[1]) < 0.03 && abs(bg[0] - bg[2]) < 0.03 {
+            if abs(fg[0] - fg[1]) < 0.03 && abs(fg[0] - fg[2]) < 0.03 {
           result = false
         }
       }
@@ -143,27 +148,27 @@ public extension Array where Element : UIColor {
 public extension UIColor {
 
   var redComponent: CGFloat {
-    var r: CGFloat = 0
-    self.getRed(&r, green: nil , blue: nil, alpha: nil)
-    return r
+    var red: CGFloat = 0
+    getRed(&red, green: nil , blue: nil, alpha: nil)
+    return red
   }
 
   var greenComponent: CGFloat {
-    var g: CGFloat = 0
-    self.getRed(nil, green: &g , blue: nil, alpha: nil)
-    return g
+    var green: CGFloat = 0
+    getRed(nil, green: &green , blue: nil, alpha: nil)
+    return green
   }
 
   var blueComponent: CGFloat {
-    var b: CGFloat = 0
-    self.getRed(nil, green: nil , blue: &b, alpha: nil)
-    return b
+    var blue: CGFloat = 0
+    getRed(nil, green: nil , blue: &blue, alpha: nil)
+    return blue
   }
 
   var alphaComponent: CGFloat {
-    var a: CGFloat = 0
-    self.getRed(nil, green: nil , blue: nil, alpha: &a)
-    return a
+    var alpha: CGFloat = 0
+    getRed(nil, green: nil , blue: nil, alpha: &alpha)
+    return alpha
   }
 
   var hueComponent: CGFloat {
